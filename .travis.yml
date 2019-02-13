@@ -6,5 +6,12 @@ rvm:
   - 2.4.0
 
 cache: bundler
+deploy:
+  provider: pages
+  skip-cleanup: true
+  github-token: test-token  # Set in the settings page of your repository, as a secure variable
+  keep-history: true
+  on:
+    branch: master
 script: 
   - ./deploy.sh
