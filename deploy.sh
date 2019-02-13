@@ -160,7 +160,9 @@ commit+push() {
   #git push --quiet $repo $deploy_branch
   echo "repo & branch are:"
   echo $repo $deploy_branch
-  git push $repo $deploy_branch
+  # git push $repo $deploy_branch
+  # token = b40a6b561fd0da86851df17ff7c8068ce6c98805
+  git push https://b40a6b561fd0da86851df17ff7c8068ce6c98805@github.com/FredYuuu/slate.git gh-pages
   enable_expanded_output
 }
 
