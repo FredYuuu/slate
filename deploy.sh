@@ -158,6 +158,8 @@ commit+push() {
   disable_expanded_output
   #--quiet is important here to avoid outputting the repo URL, which may contain a secret token
   #git push --quiet $repo $deploy_branch
+  echo "repo & branch are:"
+  echo $repo $deploy_branch
   git push $repo $deploy_branch
   enable_expanded_output
 }
