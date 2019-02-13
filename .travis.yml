@@ -7,7 +7,10 @@ rvm:
 
 branches:
   only:
-    - master
+    - cn_v1
+    - en_v1
+    - cn_v2
+    - en_v2
 
 cache: bundler
 
