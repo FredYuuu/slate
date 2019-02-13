@@ -21,13 +21,23 @@ Options:
 
 
 run_build() {
-  bundle exec middleman build --clean
+  bundle exec middleman build --clean --build-dir "build/v${version}/${language}" 
 }
 
 parse_args() {
   # Set args from a local environment file.
   if [ -e ".env" ]; then
     source .env
+  fi
+
+  #default version uses 1 if a custom one is not supplied
+  if [[ -z $version ]]; then
+    version=1
+  fi
+
+  #default language uses en if a custom one is not supplied
+  if [[ -z $language ]]; then
+    language=cn
   fi
 
   # Parse arg flags
@@ -48,6 +58,12 @@ parse_args() {
       shift 2
     elif [[ $1 = "-n" || $1 = "--no-hash" ]]; then
       GIT_DEPLOY_APPEND_HASH=false
+      shift
+    elif [[ $1 = "--source-only" ]]; then
+      source_only=true
+      shift
+    elif [[ $1 = "--push-only" ]]; then
+      push_only=true
       shift
     else
       break
@@ -73,8 +89,6 @@ parse_args() {
 }
 
 main() {
-  parse_args "$@"
-
   enable_expanded_output
 
   if ! git diff --exit-code --quiet --cached; then
@@ -157,12 +171,16 @@ commit+push() {
 
   disable_expanded_output
   #--quiet is important here to avoid outputting the repo URL, which may contain a secret token
-  #git push --quiet $repo $deploy_branch
-  echo "repo & branch are:"
-  echo $repo $deploy_branch
-  git remote add origin-pages "https://"$test_token"@github.com/FredYuuu/slate.git"
-  # git push $repo $deploy_branch
-  git push origin-pages gh-pages
+  if [ $test_token ]; then
+    # deploy by Travis CI
+    # add github token
+    git remote add origin-pages "https://"$test_token"@github.com/FredYuuu/slate.git"
+    git push --quiet origin-pages gh-pages
+  else
+    # manual deploy
+    git push --quiet $repo $deploy_branch
+  fi
+  enable_expanded_output
   enable_expanded_output
 }
 
@@ -210,11 +228,16 @@ sanitize() {
   "$@" 2> >(filter 1>&2) | filter
 }
 
-if [[ $1 = --source-only ]]; then
+parse_args "$@"
+
+if [[ -n "$source_only" ]]; then
+  echo "source only"
   run_build
-elif [[ $1 = --push-only ]]; then
-  main "$@"
+elif [[ -n "$source_only" ]]; then
+  echo "push only"  
+  main
 else
+  echo "source and push"
   run_build
-  main "$@"
+  main
 fi
