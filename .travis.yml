@@ -12,13 +12,13 @@ branches:
 cache: bundler
 
 script: 
-  - ./deploy.sh --source-only
-
-deploy:
-  provider: pages
-  skip-cleanup: true
-  github-token: $test_token  # Set in the settings page of your repository, as a secure variable
-  keep-history: true
-  on:
-    branch: master
-  target_branch: gh-pages
+  # - ./deploy.sh --source-only
+  - ./deploy.sh
+# deploy:
+#   provider: pages
+#   skip-cleanup: true
+#   github-token: $test_token  # Set in the settings page of your repository, as a secure variable
+#   keep-history: true
+#   on:
+#     branch: master
+#   target_branch: gh-pages
