@@ -6,6 +6,10 @@ rvm:
   - 2.4.0
 
 cache: bundler
+
+script: 
+  - ./deploy.sh --source-only
+
 deploy:
   provider: pages
   skip-cleanup: true
@@ -13,5 +17,4 @@ deploy:
   keep-history: true
   on:
     branch: master
-script: 
-  - ./deploy.sh
+  target_branch: gh-pages
