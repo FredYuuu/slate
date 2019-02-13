@@ -5,8 +5,8 @@
     <meta charset="utf-8">
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link href="images/favicon.ico" rel="icon" type="image/ico" />
     <title>火币 API 文档</title>
+
     <style>
       .highlight table td { padding: 5px; }
 .highlight table pre { margin: 0; }
@@ -204,29 +204,12 @@
   <body class="index" data-languages="[&quot;shell&quot;]">
     <a href="#" id="nav-button">
       <span>
+        NAV
         <img src="images/navbar.png" alt="Navbar" />
       </span>
     </a>
-    <header>
-      <div class="flex_box">
-        <img src="images/logo.svg" class="logo" alt="Logo" />
-        <div class="nav_box">
-          <span class="nav_cell">
-            <a href="javascript:;" class="nav_first">v1<i class="icon_nav"></i></a>
-            <ul class="nav_ul">
-              <li>
-                <a href="/docs/v1/en/" id="v1_url">v1</a>
-              </li>
-              <li>
-                <a href="/docs/v2/en/" id="v2_url">v2</a>
-              </li>
-            </ul>
-          </span>
-        </div>
-      </div>
-      <a href="/docs/v1/cn/" class="lang" id="lang_box">简体中文</a>
-    </header>
     <div class="toc-wrapper">
+      <img src="images/logo.png" class="logo" alt="Logo" />
         <div class="lang-selector">
               <a href="#" data-language-name="shell">shell</a>
         </div>
@@ -4862,39 +4845,5 @@ api.huobi.pro\n
           </div>
       </div>
     </div>
-    <script>
-      const lang_btn = document.getElementById('lang_box');
-      const v1_url = document.getElementById('v1_url');
-      const v2_url = document.getElementById('v2_url');
-      const url = GetUrlRelativePath();
-      if(url.indexOf('cn') != -1){
-        //如果是中文环境
-        lang_btn.innerHTML = 'English';
-        lang_btn.href = url.replace('cn/', 'en/');
-        v1_url.href = '/docs/v1/cn/';
-        v2_url.href = '/docs/v2/cn/';
-      }else{
-        //如果是英文环境
-        lang_btn.innerHTML = '中文';
-        lang_btn.href = url.replace('en/', 'cn/');
-        v1_url.href = '/docs/v1/en/';
-        v2_url.href = '/docs/v2/en/';
-      }
-      //显示语言切换按钮
-      lang_btn.style.display = 'block';
-      function GetUrlRelativePath(){
-        let url = document.location.toString();
-        let arrUrl = url.split("//");
-        let start = arrUrl[1].indexOf("/");
-        let relUrl = arrUrl[1].substring(start);
-        if(relUrl.indexOf("?") != -1){
-          relUrl = relUrl.split("?")[0];
-        }
-        if(relUrl.indexOf("#") != -1){
-          relUrl = relUrl.split("#")[0];
-        }
-        return relUrl;
-  　　}
-    </script>
   </body>
 </html>
