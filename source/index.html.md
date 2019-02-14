@@ -18,8 +18,3 @@ search: true
 ## Documentation Summary
 
 Welcome to the Huobi API! You can use our API to access all market data, trading, and account management endpoints.
-
-We have code example in Shell! You can view code examples in the dark area to the right.
-
-You can use the drop down list above to change the API version. You can also use the language option at the top right to switch documentation language.
-
