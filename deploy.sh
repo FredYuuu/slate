@@ -21,8 +21,6 @@ Options:
 
 
 run_build() {
-  echo "version="$version""
-  echo "language="$language""
   bundle exec middleman build --clean --build-dir "build/v${version}/${language}" 
 }
 
@@ -31,17 +29,8 @@ parse_args() {
   if [ -e ".env" ]; then
     source .env
   fi
-
-  #default version uses 1 if a custom one is not supplied
-  if [[ -z $version ]]; then
-    version=1
-  fi
-
-  #default language uses en if a custom one is not supplied
-  if [[ -z $language ]]; then
-    language=cn
-  fi
-
+  #
+  check_version_lang
   # Parse arg flags
   # If something is exposed as an environment variable, set/overwrite it
   # here. Otherwise, set/overwrite the internal variable instead.
@@ -88,6 +77,29 @@ parse_args() {
 
   #append commit hash to the end of message by default
   append_hash=${GIT_DEPLOY_APPEND_HASH:-true}
+}
+
+check_version_lang() {
+  br=`git branch | grep "*"`
+  branch=${br/* /}
+  cn_result=$(echo $branch | grep "cn")
+#   en_result=$(echo $branch | grep "en")
+  if [[ "$cn_result" != "" ]]
+  then
+    language="cn"
+  else
+    language="en"
+  fi
+
+  v1_result=$(echo $branch | grep "v1")
+  if [[ "$v1_result" != "" ]]
+  then
+    version="1"
+  else
+    version="2"
+  fi
+  echo "language="$language""
+  echo "version="$version""
 }
 
 main() {
