@@ -39,7 +39,7 @@ parse_args() {
 
   #default language uses en if a custom one is not supplied
   if [[ -z $language ]]; then
-    language=cn
+    language=en
   fi
 
   # Parse arg flags
