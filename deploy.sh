@@ -146,15 +146,14 @@ main() {
 }
 
 initial_deploy() {
-  echo "initial_deploy=" $deploy_directory
-  git --work-tree "$deploy_directory" checkout --orphan $deploy_branch origin/gh-pages
+  git --work-tree "$deploy_directory/build" checkout --orphan $deploy_branch
   git --work-tree "$deploy_directory" add --all
   commit+push
 }
 
 incremental_deploy() {
   #make deploy_branch the current branch
-  echo "incremental_deploy=" $deploy_directory
+  echo "initial_deploy=" $deploy_directory
   git symbolic-ref HEAD refs/heads/$deploy_branch
   #put the previously committed contents of deploy_branch into the index
   git --work-tree "$deploy_directory" reset --mixed --quiet
