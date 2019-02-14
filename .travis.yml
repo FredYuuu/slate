@@ -15,11 +15,6 @@ branches:
 cache: bundler
 
 script: 
-  # - ./deploy.sh --source-only
-  - git checkout -b v1_cn origin/v1_cn
-  - ./deploy.sh --source-only
-  - git checkout -b v1_en origin/v1_en
-  - ./deploy.sh --source-only
   - ./deploy.sh
 # deploy:
 #   provider: pages
