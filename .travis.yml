@@ -16,6 +16,10 @@ cache: bundler
 
 script: 
   # - ./deploy.sh --source-only
+  - git checkout v1_cn
+  - ./deploy.sh --source-only
+  - git checkout v1_en
+  - ./deploy.sh --source-only
   - ./deploy.sh
 # deploy:
 #   provider: pages

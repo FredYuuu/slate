@@ -21,7 +21,9 @@ Options:
 
 
 run_build() {
-  bundle exec middleman build --clean --build-dir $deploy_directory/v$version/$language
+  clean_dir=$deploy_directory/v$version/$language
+  echo "clean_dir="$clean_dir
+  bundle exec middleman build --clean --build-dir $clean_dir
 }
 
 parse_args() {
