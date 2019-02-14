@@ -21,6 +21,8 @@ Options:
 
 
 run_build() {
+  echo "version="$version""
+  echo "language="$language""
   bundle exec middleman build --clean --build-dir "build/v${version}/${language}" 
 }
 
