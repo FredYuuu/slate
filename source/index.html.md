@@ -12,9 +12,3 @@ includes:
 
 search: true
 ---
-
-# Introduction
-
-## Documentation Summary
-
-Welcome to the Huobi API! You can use our API to access all market data, trading, and account management endpoints.
