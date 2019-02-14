@@ -80,8 +80,9 @@ parse_args() {
 }
 
 check_version_lang() {
-  br=`git branch | grep "*"`
-  branch=${br/* /}
+  # br=`git branch | grep "*"`
+  # branch=${br/* /}
+  branch=$(git describe --contains --all HEAD)
   echo "branch="$branch""
   cn_result=$(echo $branch | grep "cn")
 #   en_result=$(echo $branch | grep "en")
