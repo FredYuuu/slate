@@ -21,7 +21,7 @@ Options:
 
 
 run_build() {
-  bundle exec middleman build --clean --build-dir "build/v${version}/${language}" 
+  bundle exec middleman build
 }
 
 parse_args() {
