@@ -21,7 +21,7 @@ Options:
 
 
 run_build() {
-  bundle exec middleman build --clean --build-dir "build/v${version}/${language}" 
+  bundle exec middleman build --clean --build-dir $deploy_directory/v$version/$language
 }
 
 parse_args() {
@@ -29,7 +29,7 @@ parse_args() {
   if [ -e ".env" ]; then
     source .env
   fi
-  #
+  # 
   check_version_lang
   # Parse arg flags
   # If something is exposed as an environment variable, set/overwrite it
@@ -63,7 +63,6 @@ parse_args() {
 
   # Set internal option vars from the environment and arg flags. All internal
   # vars should be declared here, with sane defaults if applicable.
-
   # Source directory & target branch.
   deploy_directory=build
   deploy_branch=gh-pages
@@ -90,6 +89,7 @@ check_version_lang() {
   #
   echo "language="$language""
   echo "version="$version""
+
 }
 
 main() {
@@ -151,6 +151,7 @@ initial_deploy() {
 
 incremental_deploy() {
   #make deploy_branch the current branch
+  echo "initial_deploy=" $deploy_directory
   git symbolic-ref HEAD refs/heads/$deploy_branch
   #put the previously committed contents of deploy_branch into the index
   git --work-tree "$deploy_directory" reset --mixed --quiet
