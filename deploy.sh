@@ -174,13 +174,14 @@ commit+push() {
   if [ $test_token ]; then
     # deploy by Travis CI
     # add github token
-    git remote add origin-pages "https://"$test_token"@github.com/FredYuuu/slate.git"
-    git push --quiet origin-pages gh-pages
+    repo = "https://"$test_token"@github.com/FredYuuu/slate.git"
+    git remote add origin-pages $repo
+    git push --quiet origin-pages $deploy_branch
   else
     # manual deploy
     git push --quiet $repo $deploy_branch
   fi
-  enable_expanded_output
+
   enable_expanded_output
 }
 
