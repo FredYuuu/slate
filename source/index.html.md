@@ -1,5 +1,5 @@
 ---
-title: Huobi API Document
+title: Hi API Document
 
 language_tabs: # must be one of https://git.io/vQNgJ
   - shell
