@@ -170,7 +170,8 @@ handle_deploy_files() {
 
 initial_deploy() {
   echo "initial_deploy..."
-  git --work-tree "$gh_pages_directory" checkout -b $deploy_branch origin/$deploy_branch
+  # git --work-tree "$gh_pages_directory" checkout -b $deploy_branch origin/$deploy_branch
+  git --work-tree "$gh_pages_directory" fetch --force $repo $deploy_branch:$deploy_branch
   handle_deploy_files
   git --work-tree "$gh_pages_directory" add --all
   commit+push
