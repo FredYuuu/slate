@@ -137,17 +137,24 @@ main() {
       echo "./gh-pages exists"
   fi
 
-  if git ls-remote --exit-code $repo "refs/heads/$deploy_branch" ; then
-    # deploy_branch exists in $repo; make sure we have the latest version
+  # if git ls-remote --exit-code $repo "refs/heads/$deploy_branch" ; then
+  #   # deploy_branch exists in $repo; make sure we have the latest version
 
-    disable_expanded_output
-    git fetch --force $repo $deploy_branch:$deploy_branch
-    enable_expanded_output
-  fi
+  #   disable_expanded_output
+  #   git fetch --force $repo $deploy_branch:$deploy_branch
+  #   enable_expanded_output
+  # fi
 
   # check if deploy_branch exists locally
-  if git show-ref --verify --quiet "refs/heads/$deploy_branch"
-  then incremental_deploy
+  if git show-ref --verify --quiet "refs/heads/$deploy_branch"; then 
+    if git ls-remote --exit-code $repo "refs/heads/$deploy_branch" ; then
+      # deploy_branch exists in $repo; make sure we have the latest version
+
+      disable_expanded_output
+      git fetch --force $repo $deploy_branch:$deploy_branch
+      enable_expanded_output
+    fi
+    incremental_deploy
   else initial_deploy
   fi
 
@@ -162,6 +169,7 @@ handle_deploy_files() {
 }
 
 initial_deploy() {
+  echo "initial_deploy..."
   git --work-tree "$gh_pages_directory" checkout -b $deploy_branch origin/$deploy_branch
   handle_deploy_files
   git --work-tree "$gh_pages_directory" add --all
@@ -169,6 +177,7 @@ initial_deploy() {
 }
 
 incremental_deploy() {
+  echo "incremental_deploy..."
   #make deploy_branch the current branch
   git symbolic-ref HEAD refs/heads/$deploy_branch
   #put the previously committed contents of deploy_branch into the index
@@ -265,3 +274,5 @@ else
   run_build
   main
 fi
+
+
