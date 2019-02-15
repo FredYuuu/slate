@@ -168,26 +168,7 @@ handle_deploy_files() {
   cp -r $build_directory/* $gh_pages_directory
 }
 
-initial_deploy() {
-  echo "initial_deploy..."
-  git fetch origin $deploy_branch
-  # git --work-tree "$gh_pages_directory" checkout -b $deploy_branch origin/$deploy_branch
-  git --work-tree "$gh_pages_directory" fetch --force $repo $deploy_branch:$deploy_branch
-  git --work-tree "$gh_pages_directory" checkout $deploy_branch
-  handle_deploy_files
-  git --work-tree "$gh_pages_directory" add --all
-  commit+push
-}
-
-incremental_deploy() {
-  echo "incremental_deploy..."
-  #make deploy_branch the current branch
-  git symbolic-ref HEAD refs/heads/$deploy_branch
-  #put the previously committed contents of deploy_branch into the index
-  git --work-tree "$gh_pages_directory" reset --mixed --quiet
-  handle_deploy_files
-  git --work-tree "$gh_pages_directory" add --all
-
+check_diff() {
   set +o errexit
   diff=$(git --work-tree "$gh_pages_directory" diff --exit-code --quiet HEAD --)$?
   set -o errexit
@@ -199,6 +180,27 @@ incremental_deploy() {
       return $diff
       ;;
   esac
+}
+
+initial_deploy() {
+  echo "initial_deploy..."
+  git fetch origin $deploy_branch
+  git --work-tree "$gh_pages_directory" fetch --force $repo $deploy_branch:$deploy_branch
+  git --work-tree "$gh_pages_directory" checkout $deploy_branch
+  handle_deploy_files
+  git --work-tree "$gh_pages_directory" add --all
+  check_diff
+}
+
+incremental_deploy() {
+  echo "incremental_deploy..."
+  #make deploy_branch the current branch
+  git symbolic-ref HEAD refs/heads/$deploy_branch
+  #put the previously committed contents of deploy_branch into the index
+  git --work-tree "$gh_pages_directory" reset --mixed --quiet
+  handle_deploy_files
+  git --work-tree "$gh_pages_directory" add --all
+  check_diff
 }
 
 commit+push() {
