@@ -21,7 +21,7 @@ Options:
 
 
 run_build() {
-  clean_dir=$deploy_directory/v$version/$language
+  clean_dir=$build_directory/v$version/$language
   echo "clean_dir="$clean_dir
   bundle exec middleman build --clean --build-dir $clean_dir
 }
@@ -66,7 +66,8 @@ parse_args() {
   # Set internal option vars from the environment and arg flags. All internal
   # vars should be declared here, with sane defaults if applicable.
   # Source directory & target branch.
-  deploy_directory=build
+  build_directory=build
+  gh_pages_directory=gh-pages
   deploy_branch=gh-pages
 
   #if no user identity is already set in the current git environment, use this:
@@ -117,14 +118,14 @@ main() {
 
   previous_branch=`git rev-parse --abbrev-ref HEAD`
 
-  if [ ! -d "$deploy_directory" ]; then
-    echo "Deploy directory '$deploy_directory' does not exist. Aborting." >&2
+  if [ ! -d "$build_directory" ]; then
+    echo "Build directory '$build_directory' does not exist. Aborting." >&2
     return 1
   fi
 
   # must use short form of flag in ls for compatibility with macOS and BSD
-  if [[ -z `ls -A "$deploy_directory" 2> /dev/null` && -z $allow_empty ]]; then
-    echo "Deploy directory '$deploy_directory' is empty. Aborting. If you're sure you want to deploy an empty tree, use the --allow-empty / -e flag." >&2
+  if [[ -z `ls -A "$build_directory" 2> /dev/null` && -z $allow_empty ]]; then
+    echo "Build directory '$build_directory' is empty. Aborting. If you're sure you want to deploy an empty tree, use the --allow-empty / -e flag." >&2
     return 1
   fi
 
@@ -146,24 +147,24 @@ main() {
 }
 
 initial_deploy() {
-  git --work-tree "$deploy_directory" checkout -b $deploy_branch origin/$deploy_branch
-  git --work-tree "$deploy_directory" add --all
+  mkdir gh-pages
+  git --work-tree "$gh_pages_directory" checkout -b $deploy_branch origin/$deploy_branch
+  git --work-tree "$gh_pages_directory" add --all
   commit+push
 }
 
 incremental_deploy() {
   #make deploy_branch the current branch
-  echo "initial_deploy=" $deploy_directory
   git symbolic-ref HEAD refs/heads/$deploy_branch
   #put the previously committed contents of deploy_branch into the index
-  git --work-tree "$deploy_directory" reset --mixed --quiet
-  git --work-tree "$deploy_directory" add --all
+  git --work-tree "$gh_pages_directory" reset --mixed --quiet
+  git --work-tree "$gh_pages_directory" add --all
 
   set +o errexit
-  diff=$(git --work-tree "$deploy_directory" diff --exit-code --quiet HEAD --)$?
+  diff=$(git --work-tree "$gh_pages_directory" diff --exit-code --quiet HEAD --)$?
   set -o errexit
   case $diff in
-    0) echo No changes to files in $deploy_directory. Skipping commit.;;
+    0) echo No changes to files in $build_directory. Skipping commit.;;
     1) commit+push;;
     *)
       echo git diff exited with code $diff. Aborting. Staying on branch $deploy_branch so you can debug. To switch back to master, use: git symbolic-ref HEAD refs/heads/master && git reset --mixed >&2
@@ -174,7 +175,7 @@ incremental_deploy() {
 
 commit+push() {
   set_user_id
-  git --work-tree "$deploy_directory" commit -m "$commit_message"
+  git --work-tree "$gh_pages_directory" commit -m "$commit_message"
 
   disable_expanded_output
   #--quiet is important here to avoid outputting the repo URL, which may contain a secret token
