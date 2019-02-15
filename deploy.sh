@@ -21,9 +21,9 @@ Options:
 
 
 run_build() {
-  clean_dir=$build_directory/v$version/$language
-  echo "clean_dir="$clean_dir
-  bundle exec middleman build --clean --build-dir $clean_dir
+  build_dir=$build_directory/v$version/$language
+  echo "build_dir="$build_dir
+  bundle exec middleman build --clean --build-dir $build_dir
 }
 
 parse_args() {
@@ -146,9 +146,24 @@ main() {
   restore_head
 }
 
+handle_deploy_files() {
+  rm -rf $gh_pages_directory/$version/$language
+  cp -r $build_directory/* $gh_pages_directory
+}
+
 initial_deploy() {
-  mkdir gh-pages
+
+  if [ ! -d $gh_pages_directory ]
+  then
+      echo "./gh-pages doesn't exist. Creating now"
+      mkdir ./$gh_pages_directory
+      echo "./gh-pages created"
+  else
+      echo "./gh-pages exists"
+  fi
+
   git --work-tree "$gh_pages_directory" checkout -b $deploy_branch origin/$deploy_branch
+  handle_deploy_files
   git --work-tree "$gh_pages_directory" add --all
   commit+push
 }
@@ -158,6 +173,7 @@ incremental_deploy() {
   git symbolic-ref HEAD refs/heads/$deploy_branch
   #put the previously committed contents of deploy_branch into the index
   git --work-tree "$gh_pages_directory" reset --mixed --quiet
+  handle_deploy_files
   git --work-tree "$gh_pages_directory" add --all
 
   set +o errexit
