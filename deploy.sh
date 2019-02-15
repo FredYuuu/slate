@@ -129,6 +129,14 @@ main() {
     return 1
   fi
 
+  if [ ! -d $gh_pages_directory ]; then
+      echo "./gh-pages doesn't exist. Creating now"
+      mkdir ./$gh_pages_directory
+      echo "./gh-pages created"
+  else
+      echo "./gh-pages exists"
+  fi
+
   if git ls-remote --exit-code $repo "refs/heads/$deploy_branch" ; then
     # deploy_branch exists in $repo; make sure we have the latest version
 
@@ -147,21 +155,13 @@ main() {
 }
 
 handle_deploy_files() {
-  rm -rf $gh_pages_directory/$version/$language
+  if [ -d "$gh_pages_directory/$version/$language" ]; then
+    rm -rf $gh_pages_directory/$version/$language
+  fi
   cp -r $build_directory/* $gh_pages_directory
 }
 
 initial_deploy() {
-
-  if [ ! -d $gh_pages_directory ]
-  then
-      echo "./gh-pages doesn't exist. Creating now"
-      mkdir ./$gh_pages_directory
-      echo "./gh-pages created"
-  else
-      echo "./gh-pages exists"
-  fi
-
   git --work-tree "$gh_pages_directory" checkout -b $deploy_branch origin/$deploy_branch
   handle_deploy_files
   git --work-tree "$gh_pages_directory" add --all
